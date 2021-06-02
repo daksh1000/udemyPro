@@ -10,6 +10,8 @@ const moment = require("moment");
 var path = require('path')
 const ejs = require("ejs");
 const nodemailer = require("nodemailer");
+var handlebars = require('handlebars');
+var fs = require('fs');
 const User = require("./modals/users");
 const Course = require("./modals/courses");
 const Student = require("./modals/students")
@@ -20,13 +22,17 @@ const check = new passwordValidator();
 let Logged_in=false
 let Role = ""
 let cour =""
+let enrolled = "Click below to Enrol"
+var _ = require('lodash');
 let m = moment()
 const cron = require('node-cron');
-s = Number(m.seconds())
-l = Number(m.minutes())
-console.log(s+" :"+l)
+a = m.format("L")
+console.log(typeof(a))
+console.log(m.date())
 
-cron.schedule('4 1 10 * * *', () => {
+
+
+cron.schedule('45 16 19 * * *', () => {
 	Student.find({},(err,foundUser)=>{
 		if(err){
 			console.log(err)
@@ -35,14 +41,21 @@ cron.schedule('4 1 10 * * *', () => {
 			let m = moment()
 			foundUser.forEach(function(stu){
 				let l = moment(stu.start_date)
+				l = l.subtract(1,"d")
+				console.log(l)
 				
 				if(m.date()===l.date() && m.month()===l.month() && m.year()===l.year()){
-					const mailOptions = {
-						from : 'daksh008546@gmail.com',
-						to :stu.email,
-						subject :'Course Remainder',
-						text : 'Your Course is scheduled for tomorrow'
-					}
+					var readHTMLFile = function(path, callback) {
+						fs.readFile(path, {encoding: 'utf-8'}, function (err, html) {
+							if (err) {
+								throw err;
+								callback(err);
+							}
+							else {
+								callback(null, html);
+							}
+						});
+					};
 					const transporter = nodemailer.createTransport({
 						service:'gmail',
 						auth :{
@@ -50,6 +63,22 @@ cron.schedule('4 1 10 * * *', () => {
 							pass:process.env.PASS
 						}
 					})
+					readHTMLFile(__dirname + '/public/abc.html', function(err, html) {
+						var template = handlebars.compile(html);
+						var replacements = {
+							 course_t: stu.course_title,
+							 td_date:m.format("L"),
+							 st_date: l.format("L")
+						};
+						var htmlToSend = template(replacements);
+					const mailOptions = {
+						from : 'daksh008546@gmail.com',
+						to :stu.email,
+						subject :stu.course_title,
+						html : htmlToSend
+			 
+					}
+					
 				  
 					transporter.sendMail(mailOptions,(error,info)=>{
 					  if(error){
@@ -58,10 +87,12 @@ cron.schedule('4 1 10 * * *', () => {
 						  console.log("Email sent : "+ info.response)
 					  }
 					})
+				});
 					
 				}
 				
 			});
+			
 		}
 	})
 	console.log('running a task every minute');
@@ -91,40 +122,49 @@ app.set('view engine',"ejs");
 
 //Api Endpoints
 
-app.get("/",(req,res)=>{
+app.get("/",async(req,res)=>{
+	enrolled="Click below to enroll"
 	if(Logged_in){
-		Course.find({}, (err, course) => {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log(req.user);
+		try{
+		
+		const course = await Course.find({start_date:{$gte: new Date()}}).exec();
+		try{
 				res.render('all_course', {
 					courses  : course,
 					rol      : Role		
 				});
-			}
-		});
+		}catch (err){
+			console.log(err)
+		}
+	}catch(err){
+		console.log(err)
+	}
 	}else{
-		Course.find({}, (err, course) => {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log(req.user);
+		try{
+		const course = await Course.find({start_date:{$gte: new Date()}}).exec();
+		try{
 				res.render('home', {
-					courses  : course,		
+					courses  : course	
 				});
-			}
-		});
+		}catch (err){
+			console.log(err)
+		}}catch(err){
+			console.log(err)
+		}
+		
 		
 	}
 	
   
 })
 
+
+
 //Register Route
 app.get("/register",(req,res)=>{
   res.render("register")
 })
+
 
 app.post("/register",(req,res)=>{
 	const role="student"
@@ -215,12 +255,14 @@ app.post("/login",(req,res)=>{
 							
 					      
 					
+						}else{
+							res.redirect("/login")
 						}
 						
 					});
 
 			}else{
-				console.log("no user")
+				res.redirect("/login")
 			}
 
 		}
@@ -229,7 +271,40 @@ app.post("/login",(req,res)=>{
 	console.log(req.body);
 })
 
+app.get("/abc/:page",verifi,(req,res)=>{
+	if(req.user.role==="admin"){
+		var perPage = 3
+    var page = req.params.page || 1
+ 
+    User
+        .find({})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .exec(function(err, users) {
+            User.countDocuments().exec(function(err, count) {
+                if (err) return next(err)
+				res.render('abc',
+				{
+                    user:users,
+					current: page,
+					rol:req.user.role,
+                    pages: Math.ceil(count / perPage)
+				}
+				)
+            })
+        })
+	}else{
+		res.render("all_u")
+	}
+	
+	
+	
+})
+
+
+
 app.get("/logout",(req,res)=>{
+	enrolled = "Click below to Enrol"
 	Logged_in = false
 	res.clearCookie("jwt");
 	
@@ -250,71 +325,59 @@ app.get("/admin",verifi,(req,res)=>{
 	
 })
 
-app.post("/admin",(req,res)=>{
-	const { course_name,email,course_title,course_description,duration,start_date,end_date,min,max} = req.body;
-	console.log(req.body)
-	let l = moment(start_date)
-	console.log(l.date())
-	const newCourse = new Course({
-		course_name,
-		email,
-		course_title,
-		course_description,
-		duration,
-		start_date,
-		end_date,
-		min,
-		max	
-	});
+app.post("/admin",verifi,(req,res)=>{
+	let { course_title,course_description,duration,start_date,end_date,min,max,price} = req.body;
+	email=req.user.email
+	let status
+	if(price=="0"){
+		status="Free"
+	}else{
+		status=price
+	}
+	let errors = [];
+	if (!course_title || !course_description|| !duration|| !start_date|| !end_date || !min || !max || !price) {
+		errors.push({ msg: 'All fields are compulsory' });
+	}
+	if (errors.length > 0) {
+		res.render('admin', { errors,course_title,course_description,duration,start_date,end_date,min,max,price });
+	}else{
+		const newCourse = new Course({
+			email,
+			course_title,
+			course_description,
+			duration,
+			start_date,
+			end_date,
+			min,
+			max	,
+			price,
+			status
 
+	});
 	newCourse.save((err)=>{
 		if(err){
 			console.log(err)
+			res.redirect("/admin")
 		}
 		else{
 			console.log("successful saved")
+			res.redirect("/user")
 		}
 	})
+	
+	
+	}
+
+	
 
 
 })
 
-//all_course
-// app.get("/all_course",verifi,(req,res)=>{
-// 	Course.find({}, (err, course) => {
-// 		if (err) {
-// 			console.log(err);
-// 		} else {
-// 			console.log(req.user);
-// 			res.render('all_course', {
-// 				courses  : course,		
-// 			});
-// 		}
-// 	});
-// })
-
-// app.post("/all_course",verifi,(req,res)=>{
-	
-// 	const newStudent = new Student({
-// 		email:req.user.email,
-// 		courses:req.body.id
-// 	});
-// 	newStudent.save((err)=>{
-// 		if(err){
-// 			console.log(err)
-// 		}
-// 		else{
-// 			console.log("Successfully Saved")
-// 		}
-// 	})
-
-
-
-// })
 
 
 //User
 app.get("/user",verifi,(req,res)=>{
+	enrolled="Click below to enroll"
 	User.find({ email: req.user.email }, (err, use) =>{
 		if(err){
 			console.log(err)
@@ -354,16 +417,39 @@ app.get("/user",verifi,(req,res)=>{
 
 	// res.render("user");
 })
+app.post("/delete",verifi,(req,res)=>{
+	let title =req.body.course_title;
 
-app.get("/pos",verifi,(req,res)=>{
-	res.render("email")
+	Course.findOneAndDelete({course_title:title},(err)=>{
+		if(err){
+			console.log(err);
+		}else{
+			Student.deleteMany({course_title:title},(err)=>{
+				if(err){
+					console.log(err);
+				}else{
+					console.log("Successfully Deleted")
+					res.redirect("/user")
+				}
+			})
+		}
+	})
+
 	
+	
+})
+app.get("/pos",verifi,(req,res)=>{
+	if(req.user.role==="admin"){
+		res.render("email")
+	}else{
+		res.render("all_u")
+	}
 })
 
 app.post("/pos",verifi,(req,res)=>{
 	message=req.body.mess
 	title = req.body.heading
-	// course_ti = req.body.course_title
+	
 	Student.find({course_title:cour},(err,stu)=>{
 		if (err) {
 			console.log(err);
@@ -406,42 +492,71 @@ app.post("/pos",verifi,(req,res)=>{
 
 //Course_Profile
 app.get('/:topic', verifi, (req, res) => {
-	const re = req.params.topic;
+	let course_enrolled = false
+	const re = _.startCase(req.params.topic);
 	cour = req.params.topic;
 	
 	
-	Course.find({}, (err, courses) => {
+	if(req.user.role=="student"){
+		Student.find({email:req.user.email}, (err,foundUser)=>{
+			if(err){
+				console.log(err)
+			}
+			else{
+				foundUser.forEach(function(use){
+					if(use.course_title==re){
+						course_enrolled=true
+						console.log(course_enrolled)
+					}
+				})
+			}
+		})
+		
+
+	}
+	
+	Course.find({course_title:re}, (err, courses) => {
+		enroll=enrolled
 		if (err) {
 			console.log(err);
 		} else {
-			Student.find({course_title:re},(err,stu)=>{
-				if (err) {
-					console.log(err);
-				} else {
-					res.render('course', {
-						course : courses,
-						user : req.user,
-						student : stu,
-						name : re,
-						rol   :Role
-					});
-				
-				}
-		
-			})
+			if(courses.length>0){
+				Student.find({course_title:re},(err,stu)=>{
+					if (err) {
+						console.log(err);
+					} else {
+						res.render('course', {
+							course : courses,
+							user : req.user,
+							student : stu,
+							name : re,
+							rol   :Role,
+							enroll  :enroll,
+							co_enrolled  : course_enrolled
+						});
+					
+					}
+			
+				})
+			}
+			else{
+				res.render("all_u")
+			}
+			
 			
 		}
 	});
 });
 
 app.post('/:topic',verifi, (req, res)=>{
-	console.log(req.body)
-	Student.findOne({course_title:req.body.course_title,email:req.user.email},(err,foundUser)=>{
+	Student.findOne({course_title:cour,email:req.user.email},(err,foundUser)=>{
+		enrolled="Click below to enrol"
 		if(err){
 			console.log(err)
 		}else{
 			if(foundUser){
-				res.send("You have already enrolled for this course")
+				enrolled="You have already enrolled for this course"
+				res.redirect("/"+foundUser.course_title)
 			}else{
 				const newStudent = new Student({
 					email:req.user.email,
@@ -468,6 +583,12 @@ app.post('/:topic',verifi, (req, res)=>{
 
 
 
+
+
+process.on('unhandledRejection', (err) => { 
+	console.error(err);
+	process.exit(1);
+  })
 
 
 

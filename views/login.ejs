@@ -1,28 +1,6 @@
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Login</title>
-
-  
-    <!-- bootstrap cdn -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <!-- css file -->
-  <link rel="stylesheet" type="text/css" href="/css/styles.css" />
-
-
-    <!-- logo -->
-    <link rel="shortcut icon" href="images/student.png" type="image" />
-
-
-</head>
-
-<body>
+<%-include("partials/header")%>
     
-    <div class="container-fluid cont-login">
+    <!-- <div class="container-fluid cont-login">
         <div class="row">
              
 
@@ -60,7 +38,56 @@
                 </div>
             </div>  
         </div>
-    </div> 
-</body>
+    </div>  -->
 
-</html>
+
+    <main class="login-form ">
+        <div class="cotainer">
+            <div class="row justify-content-center ">
+                <div class="col-md-8">
+                    <div class="card" style="margin-top:170px">
+                        <div class="card-header" style="background-color:linen">Login</div>
+                        <div class="card-body colu">
+                            <form action="login" method="POST">
+                                <div class="form-group row">
+                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="email" placeholder="Enter Email">
+                                    </div>
+                                </div>
+    
+                                <div class="form-group row">
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                                    </div>
+                                </div>
+    
+                                <div class="form-group row">
+                                    <div class="col-md-6 offset-md-4">
+                                        <div class="checkbox">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-outline-success log_button">Login</button>
+                                    Dont have an account?
+                                    <a href="register" class="btn btn-link">
+                                        Register
+                                    </a>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    
+    </main>
+    <%-include("partials/footer")%>
+
+
+

@@ -1,46 +1,40 @@
 <%-include("partials/header")%>
 
+
 <section class="head_nav">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light op">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">MyCourses</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/login">login</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/register">Register</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/user">user</a>
-              </li>
-              <%if(rol==="admin"){%>
-                <li class="nav-item">
-                  <a class="nav-link" href="/admin">create_course</a>
-                </li>
-              <%}%>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">logout</a>
-              </li>
-              
-            </ul>
-          </div>
-        </div>
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light op">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">MyCourses</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+          <%if(rol==="admin"){%>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin">Create_Course</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/abc/1">View_Users</a>
+            </li>
+          <%}%>
+          <li class="nav-item">
+            <a class="nav-link" href="/user">User</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </section>
+
+
 <section id="title" class="colored-section  p-5 justify-content-center"></section>
   <div class="container">
-    <form class="form-inline mr-auto" action="/">
-      <div class="row">
-      <input class="col-10" id="bar" type="text" name="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success btn-rounded btn-md my-0 col-2" id="searchs" value="Search"
-        type="submit">Search</button>
-        </div>
-    </form>
+    
   </div>
 </section>
 
@@ -52,18 +46,22 @@
     
           <% courses.forEach(function(course){ %>
     <div class="pricing-component col-lg-4 col-md-6">
-      <div class="card">
+      <div class="cardab">
         <div class="card-header">
-          <img class="student_image" src="/public/images/student.png" alt="Course-profile">
-        </div>
-        <div class="card-body">
           <h3>
             <%= course.course_title %> 
           </h3>
+    
+        </div>
+        <div class="card-body">
+          
           <p>Duration : <%= course.duration %></p>
-          <p><%= course.start_date %></p>
+          
+            <p><%= course.start_date %></p>
+          
+          <p>Price : <%= course.status %></p>
           <form action="/<%= course.course_title %>">
-            <button type="submit" class="form-control btn btn-dark btn-lg button2">Enroll</button>
+            <button type="submit" class="form-control btn btn-dark btn-lg button2 main_button">Enroll</button>
           </form>
           </div>
           </div>

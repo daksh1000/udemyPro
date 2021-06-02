@@ -1,11 +1,12 @@
-body{
+<%-include("partials/header")%>
+<style>
+    body{
     
     /* background-image: linear-gradient(135deg, #fbc6a4,#f4a9a8,#ce97b0); */
     background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%);
     overflow-x: hidden;
     
 }
-
 input{
     width: 20%;
 }
@@ -275,21 +276,138 @@ section#pricing {
         background-color: bisque;
     
 }
+.boxes{
+    background-color: cyan; 
+    width: 50px; 
+    height: 30px;
+     margin: 10px;
+}
+.divclass{
+    align-items: center; 
+    /* margin-left: 450px; 
+    margin-top: 500px; */
+    justify-items: center;
+}
 
+.pagination{
+    justify-content: center;
+    position: relative;
+    margin-top: 200px;
+}
 .pos-fixed {
     position: fixed;
 }
 .pos-relative {
     position: relative;
 }
+.heading{
+    padding-bottom: 5px;
+    text-align: center;
 
-.footer_l{
-    color: blanchedalmond;
 }
-
-.footer_l:hover{
-    color: cadetblue;
+.caption{
+    text-align: center;
 }
-
-
       
+</style>
+
+
+<section class="head_nav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light op">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">MyCourses</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              <%if(rol==="admin"){%>
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin">Create_Course</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/abc/1">View_Users</a>
+                </li>
+              <%}%>
+            
+            </ul>
+          </div>
+        </div>
+      </nav>
+</section>
+
+
+<div class="container">
+    <h1 class="heading">Users</h1>
+    <hr class="line">
+    <div class="row">
+        <% for (var i = 0; i < user.length; i++) { %>
+            <div class="col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><%= user[i].name %></h3>
+                        <p><%= user[i].email %></p>
+                        <p><%= user[i].phone %></p>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+    <% if (pages > 0) { %>
+        <div class="divclass">
+        <ul class="pagination text-center" >
+            <% if (current == 1) { %>
+                <div class="boxes">
+                    <li class="disabled" ><a>First</a></li>
+                </div>
+               
+            <% } else { %>
+                <div class="boxes">
+                    <li><a href="/abc/1" >First</a></li>
+                </div>
+                
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <div class="boxes">
+                        <li class="active" ><a><%= i %></a></li>
+                    </div>
+                    
+                <% } else { %>
+                    <div class="boxes">
+                        <li><a href="/abc/<%= i %>" ><%= i %></a></li>
+                    </div>
+                   
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <div class="boxes">
+                    <li class="disabled"><a>Last</a></li>
+                </div>
+                
+            <% } else { %>
+                <div class="boxes">
+                    <li><a href="/abc/<%= pages %>"></a>Last</a></li>
+                </div>
+                
+            <% } %>
+        </ul>
+    </div>
+    <% } %>
+    
+
+<%-include("partials/footer")%>

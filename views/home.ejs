@@ -1,6 +1,6 @@
 <%-include("partials/header")%>
 
-<section class="head_nav">
+<section class="head_nav ">
     <nav class="navbar navbar-expand-lg navbar-light bg-light op">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">MyCourses</a>
@@ -13,7 +13,7 @@
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/login">login</a>
+                <a class="nav-link" href="/login">Login</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/register">Register</a>
@@ -25,13 +25,7 @@
 </section>
 <section id="title" class="colored-section  p-5 justify-content-center"></section>
   <div class="container">
-    <form class="form-inline mr-auto">
-      <div class="row">
-      <input class="col-10" id="bar" type="text" name="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success btn-rounded btn-md my-0 col-2" id="searchs" value="Search"
-        type="submit">Search</button>
-        </div>
-    </form>
+    
   </div>
 </section>
 
@@ -43,16 +37,15 @@
     
           <% courses.forEach(function(course){ %>
     <div class="pricing-component col-lg-4 col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <img class="student_image" src="/public/images/student.png" alt="Course-profile">
-        </div>
+      <div class="cardab">
+       
         <div class="card-body">
           <h3>
             <%= course.course_title %> 
           </h3>
           <p>Duration : <%= course.duration %></p>
           <p><%= course.start_date %></p>
+          <p>Price : <%= course.status %></p>
           <form action="/login">
             <button type="submit" class="form-control btn btn-dark btn-lg button2">Enroll</button>
           </form>

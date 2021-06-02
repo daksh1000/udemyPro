@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
  const CourseSchema = new mongoose.Schema({
-	course_name          : {
-		type     : String,
-		required : true
-	},
 	email         : {
 		type     : String,
 		required : true
@@ -39,6 +35,14 @@ const mongoose = require('mongoose');
     },
     noOfStudents:{
         type    :Number,
+    },
+    price:{
+        type    :String,
+        required:true
+    },
+    status:{
+        type    :String,
+        required:true
     }
 	
 });

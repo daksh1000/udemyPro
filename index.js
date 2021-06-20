@@ -724,7 +724,11 @@ process.on('unhandledRejection', (err) => {
 
 
 //Listener
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
 
-app.listen("3000",()=>{console.log("Server started listening on port 3000")})
+app.listen(port,()=>{console.log("Server started listening on port "+port)})
 
 //changes

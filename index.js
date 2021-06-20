@@ -14,6 +14,8 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 const User = require("./modals/users");
 const Course = require("./modals/courses");
+const session = require("express-session");
+const flash = require("connect-flash");
 const Student = require("./modals/students")
 require('dotenv').config();
 const url = process.env.MONGODB_URL;
@@ -22,6 +24,7 @@ const check = new passwordValidator();
 let Logged_in=false
 let Role = ""
 let cour =""
+let show_edit = false
 let enrolled = "Click below to Enrol"
 var _ = require('lodash');
 let m = moment()
@@ -32,7 +35,7 @@ console.log(m.date())
 
 
 
-cron.schedule('45 16 19 * * *', () => {
+cron.schedule('10 35 12 * * *', () => {
 	Student.find({},(err,foundUser)=>{
 		if(err){
 			console.log(err)
@@ -41,6 +44,7 @@ cron.schedule('45 16 19 * * *', () => {
 			let m = moment()
 			foundUser.forEach(function(stu){
 				let l = moment(stu.start_date)
+				let r = moment(stu.start_date)
 				l = l.subtract(1,"d")
 				console.log(l)
 				
@@ -67,8 +71,11 @@ cron.schedule('45 16 19 * * *', () => {
 						var template = handlebars.compile(html);
 						var replacements = {
 							 course_t: stu.course_title,
-							 td_date:m.format("L"),
-							 st_date: l.format("L")
+							 st_date: r.format("L"),
+							 name:stu.name,
+							 duration:stu.duration,
+							 f_time:stu.f_time,
+							 t_time:stu.t_time
 						};
 						var htmlToSend = template(replacements);
 					const mailOptions = {
@@ -105,14 +112,22 @@ cron.schedule('45 16 19 * * *', () => {
 // console.log(a.toISOString());
 
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true,  useFindAndModify: false });
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 // app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(session({
+	secret:process.env.SEC,
+	resave:false,
+	saveUninitialized:false
+
+}))
+app.use(flash());
 app.set('view engine',"ejs");
+
 
 
 
@@ -131,7 +146,8 @@ app.get("/",async(req,res)=>{
 		try{
 				res.render('all_course', {
 					courses  : course,
-					rol      : Role		
+					rol      : Role,
+					message  : req.flash('message')		
 				});
 		}catch (err){
 			console.log(err)
@@ -248,9 +264,10 @@ app.post("/login",(req,res)=>{
 					    if(result === true){
 							Role = foundUser.role
 							Logged_in = true
-							const token = jwt.sign({email:foundUser.email,role:foundUser.role},process.env.SECRET,{ expiresIn: '1h' });
+							const token = jwt.sign({email:foundUser.email,role:foundUser.role,name:foundUser.name},process.env.SECRET,{ expiresIn: '1h' });
 							// res.header('auth-token',token)
 							res.cookie("jwt", token, {secure: false, httpOnly: true})
+							req.flash('message','Logged in Successfully')
     						res.redirect("/")
 							
 					      
@@ -271,7 +288,7 @@ app.post("/login",(req,res)=>{
 	console.log(req.body);
 })
 
-app.get("/abc/:page",verifi,(req,res)=>{
+app.get("/student/:page",verifi,(req,res)=>{
 	if(req.user.role==="admin"){
 		var perPage = 3
     var page = req.params.page || 1
@@ -313,7 +330,7 @@ app.get("/logout",(req,res)=>{
 
 
 //Admin side
-app.get("/admin",verifi,(req,res)=>{
+app.get("/course/add-course",verifi,(req,res)=>{
 	
 	if(req.user.role==="admin"){
 	
@@ -325,8 +342,10 @@ app.get("/admin",verifi,(req,res)=>{
 	
 })
 
-app.post("/admin",verifi,(req,res)=>{
-	let { course_title,course_description,duration,start_date,end_date,min,max,price} = req.body;
+app.post("/course/add-course",verifi,(req,res)=>{
+	let { course_title,course_description,duration,start_date,end_date,min,max,price,f_time,t_time} = req.body;
+
+	
 	email=req.user.email
 	let status
 	if(price=="0"){
@@ -335,38 +354,56 @@ app.post("/admin",verifi,(req,res)=>{
 		status=price
 	}
 	let errors = [];
-	if (!course_title || !course_description|| !duration|| !start_date|| !end_date || !min || !max || !price) {
-		errors.push({ msg: 'All fields are compulsory' });
-	}
-	if (errors.length > 0) {
-		res.render('admin', { errors,course_title,course_description,duration,start_date,end_date,min,max,price });
-	}else{
-		const newCourse = new Course({
-			email,
-			course_title,
-			course_description,
-			duration,
-			start_date,
-			end_date,
-			min,
-			max	,
-			price,
-			status
-
-	});
-	newCourse.save((err)=>{
+	Course.find({course_title:course_title}, (err, courses) => {
 		if(err){
 			console.log(err)
-			res.redirect("/admin")
-		}
-		else{
-			console.log("successful saved")
-			res.redirect("/user")
+		}else{
+			if(courses.length>0)
+			{
+				errors.push({ msg: 'Title already exists' });
+			}
+			if (!course_title || !course_description|| !duration|| !start_date|| !end_date || !min || !max || !price|| !f_time || !t_time) {
+				errors.push({ msg: 'All fields are compulsory' });
+			}
+			if (errors.length > 0) {
+				res.render('admin', { errors,course_title,course_description,duration,start_date,end_date,min,max,price,f_time,t_time });
+			}else{
+				const newCourse = new Course({
+					email,
+					course_title,
+					course_description,
+					duration,
+					start_date,
+					end_date,
+					min,
+					max	,
+					price,
+					status,
+					f_time,
+					t_time
+		
+		
+			});
+			newCourse.save((err)=>{
+				if(err){
+					console.log(err)
+					res.redirect("/admin")
+				}
+				else{
+					console.log("successful saved")
+					req.flash('message','Successfully Added')
+					res.redirect("/user")
+				}
+			})
+			
+			
+			}
 		}
 	})
+
 	
 	
-	}
+	
 
 	
 
@@ -390,7 +427,8 @@ app.get("/user",verifi,(req,res)=>{
 						res.render('user', { 
 							courses: course,
 							user   :use,
-							rol 	:Role
+							rol 	:Role,
+							message  : req.flash('message')	
 						});
 						
 					}
@@ -429,6 +467,7 @@ app.post("/delete",verifi,(req,res)=>{
 					console.log(err);
 				}else{
 					console.log("Successfully Deleted")
+					req.flash('message','Deleted Successfully')
 					res.redirect("/user")
 				}
 			})
@@ -438,7 +477,11 @@ app.post("/delete",verifi,(req,res)=>{
 	
 	
 })
-app.get("/pos",verifi,(req,res)=>{
+
+
+
+
+app.get("/course/email/:topic",verifi,(req,res)=>{
 	if(req.user.role==="admin"){
 		res.render("email")
 	}else{
@@ -446,39 +489,49 @@ app.get("/pos",verifi,(req,res)=>{
 	}
 })
 
-app.post("/pos",verifi,(req,res)=>{
+app.post("/course/email",verifi,(req,res)=>{
 	message=req.body.mess
 	title = req.body.heading
+	let errors = [];
 	
 	Student.find({course_title:cour},(err,stu)=>{
 		if (err) {
 			console.log(err);
 		} else {
-			stu.forEach(function(stude){
-				const mailOptions = {
-					from : 'daksh008546@gmail.com',
-					to :stude.email,
-					subject :title,
-					text : message
-				}
-				const transporter = nodemailer.createTransport({
-					service:'gmail',
-					auth :{
-						user:'daksh008546@gmail.com',
-						pass:process.env.PASS
+			if(stu.length>0){
+				stu.forEach(function(stude){
+					const mailOptions = {
+						from : 'daksh008546@gmail.com',
+						to :stude.email,
+						subject :title,
+						text : message
 					}
+					const transporter = nodemailer.createTransport({
+						service:'gmail',
+						auth :{
+							user:'daksh008546@gmail.com',
+							pass:process.env.PASS
+						}
+					})
+				  
+					transporter.sendMail(mailOptions,(error,info)=>{
+					  if(error){
+						  console.log(error)
+					  }else{
+						  console.log("Email sent : "+ info.response)
+						  req.flash('message','Email Sent')
+						  res.redirect("/")
+					  }
+					})
 				})
-			  
-				transporter.sendMail(mailOptions,(error,info)=>{
-				  if(error){
-					  console.log(error)
-				  }else{
-					  console.log("Email sent : "+ info.response)
-					  res.redirect("/")
-				  }
-				})
-			})
-
+	
+			}else{
+				errors.push({ msg: 'No students have enrolled for this course' });
+				if (errors.length > 0) {
+					res.render('email', { errors:errors });
+				}
+			}
+			
 			
 		
 		}
@@ -491,10 +544,26 @@ app.post("/pos",verifi,(req,res)=>{
 
 
 //Course_Profile
-app.get('/:topic', verifi, (req, res) => {
+app.get('/course/:topic', verifi, (req, res) => {
+	
 	let course_enrolled = false
 	const re = _.startCase(req.params.topic);
 	cour = req.params.topic;
+	show_edit=false
+	Course.find({course_title:re,start_date:{$gte: new Date()}},(err, courses)=>{
+		if(err){
+			console.log(err)
+		}
+		else{
+			if(courses.length>0){
+				show_edit=true
+				console.log(show_edit)
+			}
+			
+
+		}
+	})
+	
 	
 	
 	if(req.user.role=="student"){
@@ -520,6 +589,8 @@ app.get('/:topic', verifi, (req, res) => {
 		if (err) {
 			console.log(err);
 		} else {
+			console.log(re)
+			console.log(show_edit)
 			if(courses.length>0){
 				Student.find({course_title:re},(err,stu)=>{
 					if (err) {
@@ -532,7 +603,8 @@ app.get('/:topic', verifi, (req, res) => {
 							name : re,
 							rol   :Role,
 							enroll  :enroll,
-							co_enrolled  : course_enrolled
+							co_enrolled  : course_enrolled,
+							edit:show_edit
 						});
 					
 					}
@@ -548,7 +620,7 @@ app.get('/:topic', verifi, (req, res) => {
 	});
 });
 
-app.post('/:topic',verifi, (req, res)=>{
+app.post('/course/:topic',verifi, (req, res)=>{
 	Student.findOne({course_title:cour,email:req.user.email},(err,foundUser)=>{
 		enrolled="Click below to enrol"
 		if(err){
@@ -562,7 +634,10 @@ app.post('/:topic',verifi, (req, res)=>{
 					email:req.user.email,
 					course_title:req.body.course_title,
 					duration:req.body.duration,
-					start_date:req.body.start_date
+					start_date:req.body.start_date,
+					f_time:req.body.f_time,
+					t_time:req.body.t_time,
+					name:req.user.name
 			
 				});
 				newStudent.save((err)=>{
@@ -571,6 +646,7 @@ app.post('/:topic',verifi, (req, res)=>{
 					}
 					else{
 						console.log("Successfully Saved")
+						req.flash('message','Thanks for enrolling in '+cour)
 						res.redirect("/")
 					}
 				})
@@ -582,6 +658,60 @@ app.post('/:topic',verifi, (req, res)=>{
 });
 
 
+
+
+app.get('/course/edit/:topic',verifi,(req,res)=>{
+	const re = _.startCase(req.params.topic);
+	
+		Course.find({course_title:re,start_date:{$gte: new Date()}}, (err, courses) => {
+			if(err){
+				console.log(err)
+			}else{
+				console.log(courses)
+				if(courses.length>0){
+					res.render("edit",{title:courses[0]["course_title"],description:courses[0]["course_description"],
+				duration:courses[0]["duration"],start_date:courses[0]["start_date"],end_date:courses[0]["end_date"],
+			min:courses[0]["min"],max:courses[0]["max"],price:courses[0]["price"]})
+				}else{
+					res.render("all_u")
+				}
+			
+				
+			}
+		})
+	
+	// }else{
+	// 	res.render("all_u")
+	// }
+	
+	
+	
+
+	
+	
+	
+})
+
+app.post('/course/edit/:topic',verifi,(req,res)=>{
+	const re = req.params.topic;
+	console.log(cour)
+	let {course_description,duration,start_date,end_date,min,max,price,f_time,t_time} = req.body;
+	Course.findOneAndUpdate({course_title:cour},{course_description:course_description
+	,duration:duration,start_date:start_date,end_date:end_date,min:min,max:max,price:price,f_time:f_time,t_time:t_time},(err)=>{
+		if(err){
+			console.log(err)
+		}else{
+			console.log("Successfully Edited")
+			req.flash('message','Successfully Edited')
+			res.redirect("/user")
+		}
+	
+	})
+})
+
+app.get('*', function(req, res){
+	res.render("all_u");
+  });
 
 
 

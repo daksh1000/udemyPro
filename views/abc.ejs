@@ -3,7 +3,7 @@
     body{
     
     /* background-image: linear-gradient(135deg, #fbc6a4,#f4a9a8,#ce97b0); */
-    background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%);
+    background-image: url(/images/school.png);
     overflow-x: hidden;
     
 }
@@ -308,33 +308,68 @@ section#pricing {
 .caption{
     text-align: center;
 }
+.home{
+    height: 35px;
+    width: 35px;
+}
+.home:hover{
+    color: indigo;
+}
+.navbar-bran{
+    
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: 'Rancho', serif;
+    font-size: 30px;
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 25px;
+    color: cornflowerblue;
+
+    
+  }
+  .scholar{
+    width: 100px;
+  }
+  .bg-tight {
+    background-color: #FFEEDB;
+}
       
 </style>
 
 
 <section class="head_nav">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light op">
+    <nav class="navbar navbar-expand-lg navbar-light bg-tight op">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">MyCourses</a>
+            <a class="navbar-bran" href="#">//MyCourses<span class="scholar material-icons">
+                school
+                </span></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <a class="nav-link active" aria-current="page" href="/"><svg xmlns="http://www.w3.org/2000/svg" class="home" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
-              <%if(rol==="admin"){%>
+              
+        
                 <li class="nav-item">
-                  <a class="nav-link" href="/admin">Create_Course</a>
+                  <a class="nav-link" href="/student/1">Students</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/abc/1">View_Users</a>
-                </li>
-              <%}%>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/user">Courses</a>
+                    </li>
+                  
+              
             
             </ul>
           </div>
@@ -343,8 +378,8 @@ section#pricing {
 </section>
 
 
-<div class="container">
-    <h1 class="heading">Users</h1>
+<div class="container" style="margin-top: 60px;">
+    <h1 class="heading" style="font-weight: bolder;">Users</h1>
     <hr class="line">
     <div class="row">
         <% for (var i = 0; i < user.length; i++) { %>
@@ -370,7 +405,7 @@ section#pricing {
                
             <% } else { %>
                 <div class="boxes">
-                    <li><a href="/abc/1" >First</a></li>
+                    <li><a href="/student/1" >First</a></li>
                 </div>
                 
             <% } %>
@@ -386,7 +421,7 @@ section#pricing {
                     
                 <% } else { %>
                     <div class="boxes">
-                        <li><a href="/abc/<%= i %>" ><%= i %></a></li>
+                        <li><a href="/student/<%= i %>" ><%= i %></a></li>
                     </div>
                    
                 <% } %>
@@ -401,7 +436,7 @@ section#pricing {
                 
             <% } else { %>
                 <div class="boxes">
-                    <li><a href="/abc/<%= pages %>"></a>Last</a></li>
+                    <li><a href="/student/<%= pages %>"></a>Last</a></li>
                 </div>
                 
             <% } %>

@@ -1,28 +1,769 @@
+<style>
+    body{
+    
+    /* background-image: linear-gradient(135deg, #fbc6a4,#f4a9a8,#ce97b0); */
+    /* background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%); */
+    background-image: url(/images/school.png);
+    background-origin: content-box;
+    
+    overflow-x: hidden;
+    
+}
+
+input{
+    width: 20%;
+}
+
+/* .op{
+    background-color: #ce97b0;
+} */
+
+.navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-top: -25px;
+   
+    
+}
+.navbar-expand-lg .navbar-collapse {
+    display: flex!important;
+    justify-content: flex-end;
+    margin-right: 65px;
+    
+}
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 1.5rem!important;
+    padding-left: 0.5rem;
+    
+}
+/* User Page*/
+.emp-profile{
+    padding: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+.profile-img{
+    text-align: center;
+}
+.profile-img img{
+    width: 30%;
+    height: 30%;
+}
+.profile-img .file {
+    position: relative;
+    overflow: hidden;
+    margin-top: -20%;
+    width: 30%;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    background: #212529b8;
+}
+.profile-img .file input {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+}
+.profile-head h5{
+    color: #333;
+}
+.profile-head h6{
+    color: #0062cc;
+}
+.profile-edit-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 2%;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+}
+.proile-rating{
+    font-size: 12px;
+    color: #818182;
+    margin-top: 5%;
+}
+.proile-rating span{
+    color: #495057;
+    font-size: 15px;
+    font-weight: 600;
+}
+.profile-head .nav-tabs{
+    margin-bottom:5%;
+}
+.profile-head .nav-tabs .nav-link{
+    font-weight:600;
+    border: none;
+}
+.profile-head .nav-tabs .nav-link.active{
+    border: none;
+    border-bottom:2px solid #0062cc;
+}
+.profile-work{
+    padding: 14%;
+    margin-top: -15%;
+}
+.profile-work p{
+    font-size: 12px;
+    color: #818182;
+    font-weight: 600;
+    margin-top: 10%;
+}
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+}
+.profile-work ul{
+    list-style: none;
+}
+.profile-tab label{
+    font-weight: 600;
+}
+.profile-tab p{
+    font-weight: 600;
+    color: #0062cc;
+}
+section#pricing {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.container.emp-profile {
+    box-shadow: -5px 12px 15px 0px;
+}
+.btn-dark {
+    color: #fff;
+    background-color: yellow;
+    border-color: #212529;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    box-shadow: 8px 8px 8px #888888;
+}
+
+
+.cardab {
+    color: honeydew;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #766161;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 20px;
+    box-shadow: 8px 8px 8px #888888;
+    margin-bottom: 20px;
+    transition-property: width height box-shadow;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
+  
+    }
+.cardab:hover{
+    background-color: rebeccapurple;
+    box-shadow:16px 8px 8px #888888;
+    
+}
+
+    
+
+    .email_link{
+        text-align: center;
+        width: 120px;
+        height: 35px;
+        border-radius: 9px;
+        background-color:#a5e1ad ;
+        margin-left: 50px;
+        
+    }
+
+    .e_link{
+        text-decoration: none;
+        color: 4ca1a3;
+    }
+
+    .del{
+        margin-top: 40px;
+    }
+
+
+    
+      .line{
+          align-self: center;
+        width: 1000px;
+        margin-left: 200px;
+        margin-bottom: 30px;
+        
+        
+      }
+
+      
+      
+      
+      .a2{
+        text-decoration: none;
+        line-height: 1.5;
+        color: #6b727e;
+        font-family: 'Muli', sans-serif;
+      
+      }
+      
+      
+      .section10{
+        background-color: #766161;
+        color: #FFFFFF;
+        height: 60px;
+        text-align: center;
+        /* margin-bottom: 0; */
+        /* clear: both; */
+        position: relative;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        
+      }
+      
+      .tex{
+        margin-left: 500px;
+        margin-top: 20px;
+        display: inline-block;
+      
+      }
+      
+      
+      
+      
+      .aa{
+        display: inline-block;
+        margin-left: 300px;
+      }
+      .www{
+        margin-left: 10px;
+        margin-right: 10px;
+      
+      }
+
+
+      /* Login */
+      .my-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.my-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.login-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.login-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+    
+
+.log_button {
+    margin-left: 17;
+    margin-top: 12;
+    width: 120;
+}
+
+.colu{
+    
+        background-color: bisque;
+    
+}
+
+.pos-fixed {
+    position: fixed;
+}
+.pos-relative {
+    position: relative;
+}
+
+.footer_l{
+    color: blanchedalmond;
+}
+
+.footer_l:hover{
+    color: cadetblue;
+}
+
+.sv{
+    height: 40px;
+    width:40px;
+    margin-left:180px;
+    box-shadow: 8px 8px 8px #888888;
+    background-color: paleturquoise;
+    border-radius: 12px;
+    transition-property: width height;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
+   
+}
+
+.sv:hover{
+    
+    width: 60px;
+    height: 60px;
+}
+.home{
+    height: 35px;
+    width: 35px;
+}
+.home:hover{
+    color: indigo;
+}
+.bg-tight {
+    background-color: #FFEEDB;
+}
+.navbar-bran{
+    
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: 'Rancho', serif;
+    font-size: 30px;
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 25px;
+    color: cornflowerblue;
+
+    
+  }
+  .scholar{
+    width: 100px;
+  }
+
+
+      body{
+    
+    /* background-image: linear-gradient(135deg, #fbc6a4,#f4a9a8,#ce97b0); */
+    /* background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%); */
+    background-image: url(/images/school.png);
+    background-origin: content-box;
+    
+    overflow-x: hidden;
+    
+}
+
+input{
+    width: 20%;
+}
+
+/* .op{
+    background-color: #ce97b0;
+} */
+
+.navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-top: -25px;
+   
+    
+}
+.navbar-expand-lg .navbar-collapse {
+    display: flex!important;
+    justify-content: flex-end;
+    margin-right: 65px;
+    
+}
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 1.5rem!important;
+    padding-left: 0.5rem;
+    
+}
+/* User Page*/
+.emp-profile{
+    padding: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+.profile-img{
+    text-align: center;
+}
+.profile-img img{
+    width: 30%;
+    height: 30%;
+}
+.profile-img .file {
+    position: relative;
+    overflow: hidden;
+    margin-top: -20%;
+    width: 30%;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    background: #212529b8;
+}
+.profile-img .file input {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+}
+.profile-head h5{
+    color: #333;
+}
+.profile-head h6{
+    color: #0062cc;
+}
+.profile-edit-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 2%;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+}
+.proile-rating{
+    font-size: 12px;
+    color: #818182;
+    margin-top: 5%;
+}
+.proile-rating span{
+    color: #495057;
+    font-size: 15px;
+    font-weight: 600;
+}
+.profile-head .nav-tabs{
+    margin-bottom:5%;
+}
+.profile-head .nav-tabs .nav-link{
+    font-weight:600;
+    border: none;
+}
+.profile-head .nav-tabs .nav-link.active{
+    border: none;
+    border-bottom:2px solid #0062cc;
+}
+.profile-work{
+    padding: 14%;
+    margin-top: -15%;
+}
+.profile-work p{
+    font-size: 12px;
+    color: #818182;
+    font-weight: 600;
+    margin-top: 10%;
+}
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+}
+.profile-work ul{
+    list-style: none;
+}
+.profile-tab label{
+    font-weight: 600;
+}
+.profile-tab p{
+    font-weight: 600;
+    color: #0062cc;
+}
+section#pricing {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.container.emp-profile {
+    box-shadow: -5px 12px 15px 0px;
+}
+.btn-dark {
+    color: #fff;
+    background-color: yellow;
+    border-color: #212529;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    box-shadow: 8px 8px 8px #888888;
+}
+
+
+.cardab {
+    color: honeydew;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #766161;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 20px;
+    box-shadow: 8px 8px 8px #888888;
+    margin-bottom: 20px;
+    transition-property: width height box-shadow;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
+  
+    }
+.cardab:hover{
+    background-color: rebeccapurple;
+    box-shadow:16px 8px 8px #888888;
+    
+}
+
+    
+
+    .email_link{
+        text-align: center;
+        width: 120px;
+        height: 35px;
+        border-radius: 9px;
+        background-color:#a5e1ad ;
+        margin-left: 50px;
+        
+    }
+
+    .e_link{
+        text-decoration: none;
+        color: 4ca1a3;
+    }
+
+    .del{
+        margin-top: 40px;
+    }
+
+
+    
+      .line{
+          align-self: center;
+        width: 1000px;
+        margin-left: 200px;
+        margin-bottom: 30px;
+        
+        
+      }
+
+      
+      
+      
+      .a2{
+        text-decoration: none;
+        line-height: 1.5;
+        color: #6b727e;
+        font-family: 'Muli', sans-serif;
+      
+      }
+      
+      
+      .section10{
+        background-color: #766161;
+        color: #FFFFFF;
+        height: 60px;
+        text-align: center;
+        /* margin-bottom: 0; */
+        /* clear: both; */
+        position: relative;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        
+      }
+      
+      .tex{
+        margin-left: 500px;
+        margin-top: 20px;
+        display: inline-block;
+      
+      }
+      
+      
+      
+      
+      .aa{
+        display: inline-block;
+        margin-left: 300px;
+      }
+      .www{
+        margin-left: 10px;
+        margin-right: 10px;
+      
+      }
+
+
+      /* Login */
+      .my-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.my-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.login-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.login-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+    
+
+.log_button {
+    margin-left: 17;
+    margin-top: 12;
+    width: 120;
+}
+
+.colu{
+    
+        background-color: bisque;
+    
+}
+
+.pos-fixed {
+    position: fixed;
+}
+.pos-relative {
+    position: relative;
+}
+
+.footer_l{
+    color: blanchedalmond;
+}
+
+.footer_l:hover{
+    color: cadetblue;
+}
+
+.sv{
+    height: 40px;
+    width:40px;
+    margin-left:180px;
+    box-shadow: 8px 8px 8px #888888;
+    background-color: paleturquoise;
+    border-radius: 12px;
+    transition-property: width height;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
+   
+}
+
+.sv:hover{
+    
+    width: 60px;
+    height: 60px;
+}
+.home{
+    height: 35px;
+    width: 35px;
+}
+.home:hover{
+    color: indigo;
+}
+.bg-tight {
+    background-color: #FFEEDB;
+}
+.navbar-bran{
+    
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: 'Rancho', serif;
+    font-size: 30px;
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 25px;
+    color: cornflowerblue;
+
+    
+  }
+  .scholar{
+    width: 100px;
+  }
+
+
+      
+
+      
+</style>
+
 <%-include("partials/header")%>
 <section class="head_nav">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light op">
+    <nav class="navbar navbar-expand-lg navbar-light bg-tight op">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">MyCourses</a>
+            <a class="navbar-bran" href="#">//MyCourses<span class="scholar material-icons">
+                school
+                </span></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <a class="nav-link active" aria-current="page" href="/"><svg xmlns="http://www.w3.org/2000/svg" class="home" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
               
                 <li class="nav-item">
-                  <a class="nav-link" href="/admin">Create_Course</a>
+                  <a class="nav-link" href="/student/1">Students</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/all_u/1">View_Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user">User</a>
+                    <a class="nav-link" href="/user">Courses</a>
                   </li>
               
             </ul>
@@ -82,7 +823,14 @@
                     <div class="card" style="margin-top:170px">
                         <div class="card-header" style="background-color:linen">Email</div>
                         <div class="card-body colu">
-                            <form action="/pos" method="POST">
+                            <form action="/course/email" method="POST">
+                                <% if(typeof errors != 'undefined'){ %> <% errors.forEach(function(error) { %>
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <%= error.msg %>
+                                    </div>
+                                    <% }); %>
+                                    <% } %>
                                 <div class="form-group row">
                                     <label for="email_address" class="col-md-4 col-form-label text-md-right">Title</label>
                                     <div class="col-md-6">
@@ -108,7 +856,9 @@
     
                                 <div class="col-md-6 offset-md-4">
                                     
-                                    <button type="submit" formaction="/pos" class="btn btn-outline-success log_button">Post</button>
+                                    <button type="submit" formaction="/course/email" class="btn btn-outline-success log_button"><span class="material-icons">
+                                        send
+                                        </span></button>
                                     
                                 </div>
                         </div>

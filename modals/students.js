@@ -16,6 +16,15 @@ const StudentSchema = new mongoose.Schema({
 	},
 	start_date	  :{
 		type	  :Date
+	},
+	f_time		:{
+		type	:String
+	},
+	t_time		:{
+		type	:String
+	},
+	name		:{
+		type	:String
 	}
 	
 });

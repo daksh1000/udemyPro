@@ -43,6 +43,14 @@ const mongoose = require('mongoose');
     status:{
         type    :String,
         required:true
+    },
+    f_time:{
+        type    :String,
+        required:true
+    },
+    t_time:{
+        type    :String,
+        required:true
     }
 	
 });

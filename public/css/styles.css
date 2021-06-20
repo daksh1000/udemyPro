@@ -1,7 +1,10 @@
 body{
     
     /* background-image: linear-gradient(135deg, #fbc6a4,#f4a9a8,#ce97b0); */
-    background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%);
+    /* background-image: -webkit-linear-gradient(-35deg,#fbc6a4 50%, #f4a9a8 50%); */
+    background-image: url(/images/school.png);
+    background-origin: content-box;
+    
     overflow-x: hidden;
     
 }
@@ -135,7 +138,28 @@ section#pricing {
     padding-right: 40px;
 }
 .container.emp-profile {
+    background-color:bisque;
     box-shadow: -5px 12px 15px 0px;
+    
+    margin-bottom: 20px;
+}
+.btn-dark {
+    color: #fff;
+    background-color: yellow;
+    border-color: #212529;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    box-shadow: 8px 8px 8px #888888;
 }
 
 
@@ -150,16 +174,20 @@ section#pricing {
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 20px;
-    box-shadow: -5px 12px 15px 0px;
+    box-shadow: 8px 8px 8px #888888;
     margin-bottom: 20px;
+    transition-property: width height box-shadow;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
   
     }
+.cardab:hover{
+    background-color: rebeccapurple;
+    box-shadow:16px 8px 8px #888888;
+    
+}
 
-    .btn-dark {
-        color: #fff;
-        background-color: yellow;
-        border-color: #212529;
-    }
+    
 
     .email_link{
         text-align: center;
@@ -290,6 +318,62 @@ section#pricing {
 .footer_l:hover{
     color: cadetblue;
 }
+
+.sv{
+    height: 40px;
+    width:40px;
+    margin-left:180px;
+    box-shadow: 8px 8px 8px #888888;
+    background-color: paleturquoise;
+    border-radius: 12px;
+    transition-property: width height;
+    transition-duration: 1s;
+  transition-timing-function: ease-out;
+   
+}
+
+.sv:hover{
+    
+    width: 60px;
+    height: 60px;
+}
+.home{
+    height: 35px;
+    width: 35px;
+}
+.home:hover{
+    color: indigo;
+}
+.bg-tight {
+    background-color: #FFEEDB;
+}
+.navbar-bran{
+    
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: 'Rancho', serif;
+    font-size: 30px;
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 25px;
+    color: cornflowerblue;
+
+    
+  }
+  .scholar{
+    width: 100px;
+  }
+
+  .sep{
+      width: 380px;
+      padding: 10px;
+      background-color:azure;
+      border-radius: 16px;
+      opacity: 0.9;
+  }
 
 
       

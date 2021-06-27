@@ -35,7 +35,7 @@ console.log(m.date())
 
 
 
-cron.schedule('10 35 12 * * *', () => {
+cron.schedule('40 35 17 * * *', () => {
 	Student.find({},(err,foundUser)=>{
 		if(err){
 			console.log(err)
@@ -114,6 +114,13 @@ cron.schedule('10 35 12 * * *', () => {
 
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true,  useFindAndModify: false });
 
+mongoose.connection.on('error', err => {
+	console.log(err);
+  });
+  mongoose.connection.on('disconnected', function () {  
+	console.log('Mongoose default connection disconnected'); 
+  });
+
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -151,9 +158,11 @@ app.get("/",async(req,res)=>{
 				});
 		}catch (err){
 			console.log(err)
+			res.render("all_u")
 		}
 	}catch(err){
 		console.log(err)
+		res.render("all_u")
 	}
 	}else{
 		try{
@@ -164,8 +173,10 @@ app.get("/",async(req,res)=>{
 				});
 		}catch (err){
 			console.log(err)
+			res.render("all_u")
 		}}catch(err){
 			console.log(err)
+			res.render("all_u")
 		}
 		
 		
@@ -178,7 +189,12 @@ app.get("/",async(req,res)=>{
 
 //Register Route
 app.get("/register",(req,res)=>{
-  res.render("register")
+	if(!Logged_in){
+		res.render("register")
+	}
+	else{
+		res.redirect("/");
+	}
 })
 
 
@@ -250,7 +266,13 @@ app.post("/register",(req,res)=>{
 
 //Login
 app.get("/login",(req,res)=>{
-  res.render("login")
+	if(!Logged_in){
+		res.render("login")
+	}
+	else{
+		res.redirect("/");
+	}
+  
 })
 
 app.post("/login",(req,res)=>{
@@ -442,7 +464,8 @@ app.get("/user",verifi,(req,res)=>{
 						res.render('user', { 
 							students: stud,
 							user   :use,
-							rol		:Role
+							rol		:Role,
+							message  : req.flash('message')	
 							
 						});
 					}

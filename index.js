@@ -294,7 +294,7 @@ app.post("/login",(req,res)=>{
 							Logged_in = true
 							const token = jwt.sign({email:foundUser.email,role:foundUser.role,name:foundUser.name},process.env.SECRET,{ expiresIn: '1h' });
 							// res.header('auth-token',token)
-							res.cookie("jwt", token, {secure: false, httpOnly: true})
+							res.cookie("jwt", token, {secure: true, httpOnly: true})
 							req.flash('message','Logged in Successfully')
     						res.redirect("/")
 							

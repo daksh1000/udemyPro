@@ -86,15 +86,21 @@ cron.schedule('40 35 17 * * *', () => {
 			 
 					}
 					
-				  
+				  try{
 					transporter.sendMail(mailOptions,(error,info)=>{
 					  if(error){
 						  console.log(error)
+						  console.log("EMAIL ERROR: if "+err)
 					  }else{
-						  console.log("Email sent : "+ info.response)
+						  console.log(" cron shoots, Email sent : "+ info.response)
 					  }
-					})
+					})}catch{(err)=>{
+						console.log("EMAIL ERROR: catch "+err)
+					}
+
+					}
 				});
+				
 					
 				}
 				
@@ -536,16 +542,19 @@ app.post("/course/email",verifi,(req,res)=>{
 							pass:process.env.PASS
 						}
 					})
-				  
+				  try{
 					transporter.sendMail(mailOptions,(error,info)=>{
 					  if(error){
-						  console.log(error)
+						console.log("EMAIL ERROR: if "+error)
 					  }else{
 						  console.log("Email sent : "+ info.response)
 						  req.flash('message','Email Sent')
 						  res.redirect("/")
 					  }
 					})
+				}catch{(err)=>{
+					console.log("EMAIL ERROR: catch "+err)
+				}}
 				})
 	
 			}else{

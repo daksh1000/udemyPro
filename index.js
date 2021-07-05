@@ -60,13 +60,21 @@ cron.schedule('40 35 17 * * *', () => {
 							}
 						});
 					};
-					const transporter = nodemailer.createTransport({
-						service:'gmail',
-						auth :{
-							user:'daksh008546@gmail.com',
-							pass:process.env.PASS
+					// const transporter = nodemailer.createTransport({
+					// 	service:'gmail',
+					// 	auth :{
+					// 		user:'daksh008546@gmail.com',
+					// 		pass:process.env.PASS
+					// 	}
+					// })
+					var transporter = nodemailer.createTransport({
+						host: "smtp.mailtrap.io",
+						port: 2525,
+						auth: {
+						  user: "4ae3c609d392c1",
+						  pass: process.env.PASS
 						}
-					})
+					  });
 					readHTMLFile(__dirname + '/public/abc.html', function(err, html) {
 						var template = handlebars.compile(html);
 						var replacements = {
@@ -152,50 +160,73 @@ app.set('view engine',"ejs");
 
 app.get("/",async(req,res)=>{
 	enrolled="Click below to enroll"
-	if(Logged_in){
+	if(req.cookies['jwt']){
 		try{
 		
-		const course = await Course.find({start_date:{$gte: new Date()}}).exec();
-		try{
-				res.render('all_course', {
-					courses  : course,
-					rol      : Role,
-					message  : req.flash('message')		
-				});
-		}catch (err){
+			const course = await Course.find({start_date:{$gte: new Date()}}).exec();
+			try{
+					res.render('all_course', {
+						courses  : course,
+						rol      : req.cookies['role'],
+						message  : req.flash('message')		
+					});
+			}catch (err){
+				console.log(err)
+				res.render("all_u")
+			}
+		}catch(err){
 			console.log(err)
 			res.render("all_u")
 		}
-	}catch(err){
-		console.log(err)
-		res.render("all_u")
-	}
+
 	}else{
 		try{
-		const course = await Course.find({start_date:{$gte: new Date()}}).exec();
-		try{
-				res.render('home', {
-					courses  : course	
-				});
-		}catch (err){
-			console.log(err)
-			res.render("all_u")
-		}}catch(err){
-			console.log(err)
-			res.render("all_u")
-		}
-		
-		
+			const course = await Course.find({start_date:{$gte: new Date()}}).exec();
+			try{
+					res.render('home', {
+						courses  : course	
+					});
+			}catch (err){
+				console.log(err)
+				res.render("all_u")
+			}}catch(err){
+				console.log(err)
+				res.render("all_u")
+			}
 	}
-	
+		
+			
   
 })
+
+// app.get("/home",verifi,async(req,res)=>{
+// 	try{
+		
+// 		const course = await Course.find({start_date:{$gte: new Date()}}).exec();
+// 		try{
+// 				res.render('all_course', {
+// 					courses  : course,
+// 					rol      : req.body.role,
+// 					message  : req.flash('message')		
+// 				});
+// 		}catch (err){
+// 			console.log(err)
+// 			res.render("all_u")
+// 		}
+// 	}catch(err){
+// 		console.log(err)
+// 		res.render("all_u")
+// 	}
+
+// })
 
 
 
 //Register Route
 app.get("/register",(req,res)=>{
-	if(!Logged_in){
+	
+	if(!req.cookies['jwt']){
+		console.log(req.cookies)
 		res.render("register")
 	}
 	else{
@@ -272,7 +303,8 @@ app.post("/register",(req,res)=>{
 
 //Login
 app.get("/login",(req,res)=>{
-	if(!Logged_in){
+	if(!req.cookies['jwt']){
+		console.log(req.cookies)
 		res.render("login")
 	}
 	else{
@@ -293,8 +325,10 @@ app.post("/login",(req,res)=>{
 							Role = foundUser.role
 							Logged_in = true
 							const token = jwt.sign({email:foundUser.email,role:foundUser.role,name:foundUser.name},process.env.SECRET,{ expiresIn: '1h' });
+						
 							// res.header('auth-token',token)
 							res.cookie("jwt", token, {secure: true, httpOnly: true})
+							res.cookie("role",foundUser.role,{secure: true, httpOnly: true})
 							req.flash('message','Logged in Successfully')
     						res.redirect("/")
 							
@@ -352,6 +386,7 @@ app.get("/logout",(req,res)=>{
 	enrolled = "Click below to Enrol"
 	Logged_in = false
 	res.clearCookie("jwt");
+	res.clearCookie("role");
 	
 	res.redirect("/")
 })
@@ -447,7 +482,7 @@ app.get("/user",verifi,(req,res)=>{
 		if(err){
 			console.log(err)
 		}else{
-			if(Role==="admin"){
+			if(req.user.role==="admin"){
 				Course.find({ email: req.user.email }, (err, course) => {
 					if (err) {
 						console.log(err);
@@ -455,7 +490,7 @@ app.get("/user",verifi,(req,res)=>{
 						res.render('user', { 
 							courses: course,
 							user   :use,
-							rol 	:Role,
+							rol 	:req.user.role,
 							message  : req.flash('message')	
 						});
 						
@@ -470,7 +505,7 @@ app.get("/user",verifi,(req,res)=>{
 						res.render('user', { 
 							students: stud,
 							user   :use,
-							rol		:Role,
+							rol		:req.user.role,
 							message  : req.flash('message')	
 							
 						});
@@ -535,13 +570,21 @@ app.post("/course/email",verifi,(req,res)=>{
 						subject :title,
 						text : message
 					}
-					const transporter = nodemailer.createTransport({
-						service:'gmail',
-						auth :{
-							user:'daksh008546@gmail.com',
-							pass:process.env.PASS
+					// const transporter = nodemailer.createTransport({
+					// 	service:'gmail',
+					// 	auth :{
+					// 		user:'daksh008546@gmail.com',
+					// 		pass:process.env.PASS
+					// 	}
+					// })
+					var transporter = nodemailer.createTransport({
+						host: "smtp.mailtrap.io",
+						port: 2525,
+						auth: {
+						  user: "4ae3c609d392c1",
+						  pass: process.env.PASS
 						}
-					})
+					  });
 				  try{
 					transporter.sendMail(mailOptions,(error,info)=>{
 					  if(error){
@@ -633,7 +676,7 @@ app.get('/course/:topic', verifi, (req, res) => {
 							user : req.user,
 							student : stu,
 							name : re,
-							rol   :Role,
+							rol   :req.user.role,
 							enroll  :enroll,
 							co_enrolled  : course_enrolled,
 							edit:show_edit

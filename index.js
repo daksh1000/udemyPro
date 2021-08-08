@@ -35,7 +35,7 @@ console.log(m.date())
 
 
 
-cron.schedule('40 35 17 * * *', () => {
+cron.schedule('40 25 19 * * *', () => {
 	Student.find({},(err,foundUser)=>{
 		if(err){
 			console.log(err)
@@ -807,3 +807,6 @@ if (port == null || port == "") {
 app.listen(port,()=>{console.log("Server started listening on port "+port)})
 
 //changes
+
+
+
